@@ -1,10 +1,15 @@
-This project is created to mimic the workflow of a multithreaded http client-server architecture.
-It contains a multithreaded server which the user doesn't interact with, a client code, which is made for the user and a library, where all of the functions needed are held.
-The server supports several http methods which are present in real servers:
-1. GET -> used to get the content of the file.
-2. POST -> used to append to the content of the file, if the file doesn't exist, it is created.
-3. PUT -> used to truncate the content of the file, if the file doesn't exist, it is created.
-4. ECHO -> used to test the work of the server.
-5. OPTIONS -> used to list all the methods supported by the server.
+This project mimics the workflow of a multithreaded HTTP client–server architecture. It includes a multithreaded server (not directly interacted with by the user), a client program intended for user interaction, and a library containing all required helper functions.
 
-The server requires http requests and answers with http responses, as in real http server.
+The server supports several HTTP methods commonly found in real servers:
+
+GET – retrieves the content of a file.
+
+POST – appends data to a file; if the file does not exist, it is created.
+
+PUT – replaces the entire content of a file; if the file does not exist, it is created.
+
+ECHO – used for testing server functionality.
+
+OPTIONS – returns a list of methods supported by the server.
+
+The server expects well-formed HTTP requests and returns HTTP responses, following real HTTP server conventions.
