@@ -12,6 +12,7 @@
 #include <poll.h>
 #include <pthread.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include "header.h"
 
 #define MAX_CLIENTS 5
@@ -88,6 +89,11 @@ void server_init()
     addr.sin_family = AF_INET;
     addr.sin_port = htons(5001);
     inet_pton(AF_INET, "127.0.0.1", &addr.sin_addr);
+
+    if (mkdir("files", 0777) < 0 && errno != EEXIST) {
+        perror("mkdir");
+        exit(1);
+    }
 
     if(bind(listener, (struct sockaddr *)&addr, sizeof(addr)) < 0)
     {
