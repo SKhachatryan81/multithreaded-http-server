@@ -13,3 +13,5 @@ ECHO – used for testing server functionality.
 OPTIONS – returns a list of methods supported by the server.
 
 The server expects well-formed HTTP requests and returns HTTP responses, following real HTTP server conventions.
+
+The project provides a Bash script that enables the user to launch one server terminal and multiple client terminals for testing purposes.

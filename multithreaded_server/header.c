@@ -271,7 +271,6 @@ void request_get(req_struct* req, int client_fd)
 void request_post(req_struct* req, int client_fd)
 {
     int status = 100;
-    size_t size = 0;
     size_t body_len = 0;
     char* buf = req->body;
     if(buf != NULL)
@@ -312,7 +311,6 @@ void request_post(req_struct* req, int client_fd)
             perror("fstat");
             return;
         }
-        size = st.st_size;
 
         size_t written = write(fd, body, body_len);
         if(written != body_len)
@@ -341,7 +339,6 @@ void request_post(req_struct* req, int client_fd)
 void request_put(req_struct* req, int client_fd)
 {
     int status = 100;
-    size_t size = 0;
     size_t body_len = 0;
     char* buf = req->body;
     if(buf != NULL)
@@ -382,7 +379,6 @@ void request_put(req_struct* req, int client_fd)
             perror("fstat");
             return;
         }
-        size = st.st_size;
 
         size_t written = write(fd, body, body_len);
         if(written != body_len)

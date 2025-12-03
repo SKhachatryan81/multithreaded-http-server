@@ -25,7 +25,6 @@ void* client_thread(void* arg)
     int fd = *(int*)arg;
 
     req_struct req;
-    res_struct res;
 
     while(1)
     {
