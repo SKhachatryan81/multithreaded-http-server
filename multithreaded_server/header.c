@@ -185,6 +185,7 @@ void request_get(req_struct* req, int client_fd)
 {
     int status = 100;
     size_t size = 0;
+    char* body = NULL;
 
     char* destination;
     size_t len = strlen("files/") + strlen(req->dest) + 1;
@@ -196,14 +197,20 @@ void request_get(req_struct* req, int client_fd)
     strcpy(destination, "files/");
     strcat(destination, req->dest);  
 
+   
     int fd = open(destination, O_RDONLY);
     if(fd < 0)
     {
         if(errno == ENOENT)
         {
             status = 101;
+            body = NULL;
         }else{
             perror("open");
+            free(destination);
+            free(req->dest);
+            free(req->method);
+            free(req->vers);
             return;
         }
     }else{
@@ -212,18 +219,22 @@ void request_get(req_struct* req, int client_fd)
         {
             perror("fstat");
             close(fd);
-            exit(1);
+            return;
         }
 
         size = st.st_size;
         if(size == 0)
         {
             status = 102;
+        }
+
+        body = malloc(size + 1);
+        if(!body)
+        {
+            perror("malloc");
             close(fd);
             return;
         }
-
-        char* body = malloc(size + 1);
         int n = read(fd, body, size);
         if(n < 0)
         {
@@ -234,24 +245,24 @@ void request_get(req_struct* req, int client_fd)
         if(n == 0)
         {
             status = 102;
-            close(fd);
-            return;
+            body = NULL;
+        }else{
+            body[strcspn(body, "\n")] = '\0';
         }
-        body[n - 1] = '\0';
-
-        char* res = res_init(status, body);
-        if(res == NULL)
-        {
-            perror("res");
-            close(fd);
-            return;
-        }
-        write(client_fd, res, strlen(res));
-        free(res);
-        free(body);
-        
+        close(fd);
     }
-
+    
+    char* res = res_init(status, body);
+    if(res == NULL)
+    {
+        perror("res");
+        return;
+    }
+    write(client_fd, res, strlen(res));
+    free(res);
+    free(body);
+    free(destination);
+        
     free(req->dest);
     free(req->method);
     free(req->vers);
